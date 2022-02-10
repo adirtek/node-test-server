@@ -1,8 +1,16 @@
+
 var net = require('net');
 
-var server = net.createServer(function(socket) {
-	socket.write('Echo server\r\n');
-	socket.pipe(socket);
-});
+var server = net.createServer(function(conn){
+  console.log('server-> tcp server created');
 
-server.listen(1337, '127.0.0.1');
+  conn.on('data', function(data){
+    console.log('server-> ' + data + ' from ' + conn.remoteAddress + ':' + conn.remotePort);
+    conn.write('server -> Repeating: ' + data);
+  });
+  conn.on('close', function(){
+    console.log('server-> client closed connection');
+  });
+}).listen(3000);
+
+console.log('listening on port 3000');
